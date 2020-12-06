@@ -24,7 +24,7 @@ const main = async ()=> {
   dotenv.config();
   const conn = await createConnection({
     type: "postgres",
-    url: process.env.DB_URL,
+    url: process.env.DATABASE_URL,
     migrations: [path.join(__dirname, "./migrations/*")],
     entities: [User, Catalog, Artical, Journal, Borrow],
     synchronize: true,
@@ -36,7 +36,7 @@ const main = async ()=> {
   const app = express();
   
   const RedisStore = connectRedis(session);
-  const redis = new Redis();
+  const redis = new Redis(process.env.REDIS_URL);
 
 
   app.use(
@@ -54,7 +54,7 @@ const main = async ()=> {
         secure: __prod__,
       },
       saveUninitialized: false,
-      secret: process.env.REDIS_SECRET,
+      secret: process.env.SESSION_SECRET,
       resave: false,
     })
   )
