@@ -49,9 +49,10 @@ const main = async ()=> {
         disableTTL: true
       }),
       cookie: {
-        maxAge: 1000 * 3600* 24,
+        path:"/",
+        // maxAge: 1000 * 3600* 24,
         httpOnly: true,
-        sameSite: "lax",
+        // sameSite: "lax",
         secure: __prod__,
       },
       saveUninitialized: false,
