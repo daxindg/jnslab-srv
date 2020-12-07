@@ -48,10 +48,10 @@ const main = async ()=> {
     }),
     cookie: {
       path:"/",
-      // maxAge: 1000 * 3600* 24,
+      maxAge: 1000 * 3600* 24,
       httpOnly: true,
-      // sameSite: "lax",
-      secure: false,
+      sameSite: "none",
+      secure: __prod__,
     },
     saveUninitialized: false,
     secret: process.env.SESSION_SECRET,
