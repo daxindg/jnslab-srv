@@ -34,7 +34,7 @@ const main = async ()=> {
   await conn.runMigrations();
 
   const app = express();
-  app.set("trust proxy", 1);
+  app.set("trust proxy", true);
   
   const RedisStore = connectRedis(session);
   const redis = new Redis(process.env.REDIS_URL);
@@ -68,7 +68,10 @@ const main = async ()=> {
     context: ({req, res}):MyContext => ({req, res, redis }),
   });
   
-  apolloServer.applyMiddleware({app, cors: {origin: [process.env.CORS_URL, "http://localhost:3000"], credentials: true}});
+  const allowedOrigins = [process.env.CORS_URL, "http://localhost:3000"];
+  console.log(allowedOrigins);
+
+  apolloServer.applyMiddleware({app, cors: {origin: allowedOrigins, credentials: true}});
 
   app.listen(parseInt(process.env.PORT), () => {
     console.log(`server started on localhost:${process.env.PORT}`);
