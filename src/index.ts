@@ -1,24 +1,24 @@
-import 'reflect-metadata';
-
-import dotenv from 'dotenv-safe';
-import { __prod__ } from "./constants";
-import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
-import {buildSchema} from 'type-graphql';
-import { HelloResolver } from "./resolvers/hello";
-import { CatalogResolver } from "./resolvers/catalog";
-import { UserResolver } from './resolvers/user';
-import Redis from 'ioredis';
-import session from 'express-session';
 import connectRedis from 'connect-redis';
-import { MyContext } from './types/MyContext';
-import {createConnection} from 'typeorm';
-import { Catalog } from './entities/Catalog';
-import { User } from './entities/User';
-import { Artical } from './entities/Article';
-import { Journal } from './entities/Journal';
-import { Borrow } from './entities/Borrow';
+import dotenv from 'dotenv-safe';
+import express from 'express';
+import session, { SessionOptions } from 'express-session';
+import Redis from 'ioredis';
 import path from 'path';
+import 'reflect-metadata';
+import { buildSchema } from 'type-graphql';
+import { createConnection } from 'typeorm';
+import { __prod__ } from "./constants";
+import { Artical } from './entities/Article';
+import { Borrow } from './entities/Borrow';
+import { Catalog } from './entities/Catalog';
+import { Journal } from './entities/Journal';
+import { User } from './entities/User';
+import { CatalogResolver } from "./resolvers/catalog";
+import { HelloResolver } from "./resolvers/hello";
+import { UserResolver } from './resolvers/user';
+import { MyContext } from './types/MyContext';
+
 
 const main = async ()=> {
   dotenv.config();
@@ -39,27 +39,30 @@ const main = async ()=> {
   const RedisStore = connectRedis(session);
   const redis = new Redis(process.env.REDIS_URL);
 
+  const sessionOption:SessionOptions = {
+    name: 'sid',
+    store: new RedisStore({ 
+      client: redis,
+      disableTouch: true,
+      disableTTL: true
+    }),
+    cookie: {
+      path:"/",
+      // maxAge: 1000 * 3600* 24,
+      httpOnly: true,
+      // sameSite: "lax",
+      secure: false,
+    },
+    saveUninitialized: false,
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+  };
+
+  console.log(sessionOption);
 
   app.use(
-    session({
-      name: 'sid',
-      store: new RedisStore({ 
-        client: redis,
-        disableTouch: true,
-        disableTTL: true
-      }),
-      cookie: {
-        path:"/",
-        // maxAge: 1000 * 3600* 24,
-        httpOnly: true,
-        // sameSite: "lax",
-        secure: __prod__,
-      },
-      saveUninitialized: false,
-      secret: process.env.SESSION_SECRET,
-      resave: false,
-    })
-  )
+    session(sessionOption)
+  );
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
