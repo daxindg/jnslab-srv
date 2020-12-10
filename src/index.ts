@@ -50,7 +50,7 @@ const main = async ()=> {
       path:"/",
       maxAge: 1000 * 3600* 24,
       httpOnly: true,
-      sameSite: "lax",
+      sameSite: __prod__ ? "none":"lax",
       secure: __prod__,
     },
     saveUninitialized: false,
