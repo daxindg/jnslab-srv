@@ -1,6 +1,6 @@
 import { Field, InputType } from "type-graphql";
 @InputType()
-export class CreateCatalogInputs {
+export class JournalInputs {
   @Field()
   title: string;
   @Field()

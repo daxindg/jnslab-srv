@@ -1,44 +1,54 @@
-import { Field, Int, ObjectType } from "type-graphql";
-import { BaseEntity, Column, Entity , ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Artical } from "./Article";
-import { Borrow } from "./Borrow";
-import { Catalog } from "./Catalog";
 
+import { Field, Int, ObjectType } from "type-graphql";
+import { BaseEntity, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Issue } from "./Issue";
 
 @ObjectType()
 @Entity()
 export class Journal extends BaseEntity {
-  @Field(()=>Int)
+
+
+  @Field(() => Int)
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
-
-  @Field(()=>Int)
+  @Field({nullable:true})
   @Column()
-  year: number;
+  title!: string;
 
-  @Field(()=>Int)
+  @Field({nullable:true})
+  @Column({unique: true})
+  issn!: string;
+
+  @Field({nullable:true})
+  @Column({unique: true, nullable:true})
+  cn: string;
+
+  @Field({nullable:true})
+  @Column({unique: true, nullable:true})
+  yfdh: string;
+
+  @Field({nullable:true})
   @Column()
-  vol: number;
+  period: string;
 
-  @Field(()=>Int)
-  @Column()
-  no: number;
+  @Field({nullable:true})
+  @Column({nullable:true})
+  pub_place: string;
 
-  @Field(()=>Int)
-  @Column()
-  total:number;
+  @Field({nullable:true})
+  @Column({nullable:true})
+  organizer: string;
 
-  @Field(()=>Int)
-  @Column()
-  rem: number;
+  @Field(() => Date)
+  @CreateDateColumn()
+  createdAt:Date;
 
-  @OneToMany(() => Artical, artical => artical.journal)
-  articals: Artical[];
+  @Field(() => Date)
+  @UpdateDateColumn()
+  updatedAt:Date;
 
-  @ManyToOne(() => Catalog, catalog => catalog.journals, {nullable: false})
-  catalog: Catalog;
-
-  @OneToMany(() => Borrow, borrow => borrow.journal)
-  borrows: Borrow[];
+  @Field(() => [Issue], {nullable: true})
+  @OneToMany(() => Issue, issue => issue.journal)
+  issues: Issue[];
 }

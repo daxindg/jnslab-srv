@@ -1,7 +1,7 @@
 import { Field, Int, ObjectType } from "type-graphql";
 import { BaseEntity, Column, CreateDateColumn, Entity,  ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
-import { Journal } from "./Journal";
+import { Issue } from "./Issue";
 import { User } from "./User";
 
 
@@ -32,8 +32,8 @@ export class Borrow extends BaseEntity {
   @CreateDateColumn()
   createAt: Date;
 
-  @ManyToOne(() => Journal, journal => journal.borrows, {nullable: false})
-  journal: Journal;
+  @ManyToOne(() => Issue, journal => journal.borrows, {nullable: false})
+  journal: Issue;
 
   @ManyToOne(() => User, user => user.borrows, {nullable: false})
   user: User;

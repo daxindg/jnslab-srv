@@ -1,12 +1,12 @@
 import { Field, Int, ObjectType } from "type-graphql";
 import { BaseEntity, Column, Entity,  ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
-import { Journal } from "./Journal";
+import { Issue } from "./Issue";
 
 
 @ObjectType()
 @Entity()
-export class Artical extends BaseEntity {
+export class Article extends BaseEntity {
   @Field(()=>Int)
   @PrimaryGeneratedColumn()
   id: number;
@@ -31,7 +31,10 @@ export class Artical extends BaseEntity {
   @Column()
   pend: number;
 
-  @ManyToOne(() => Journal, journal => journal.articals, {nullable: false})
-  journal: Journal;
-
+  @ManyToOne(() => Issue, issue => issue.articles, {nullable: false})
+  issue: Issue;
+  
+  @Field(() => Int)
+  @Column()
+  issueId: number;
 }

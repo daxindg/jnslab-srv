@@ -9,15 +9,15 @@ import 'reflect-metadata';
 import { buildSchema } from 'type-graphql';
 import { createConnection } from 'typeorm';
 import { __prod__ } from "./constants";
-import { Artical } from './entities/Article';
+import { Article } from './entities/Article';
 import { Borrow } from './entities/Borrow';
-import { Catalog } from './entities/Catalog';
 import { Journal } from './entities/Journal';
+import { Issue } from './entities/Issue';
 import { User } from './entities/User';
-import { CatalogResolver } from "./resolvers/catalog";
-import { HelloResolver } from "./resolvers/hello";
+import { JournalResolver } from "./resolvers/journal";
 import { UserResolver } from './resolvers/user';
 import { MyContext } from './types/MyContext';
+import { IssueResolver } from './resolvers/issue';
 
 
 const main = async ()=> {
@@ -26,7 +26,7 @@ const main = async ()=> {
     type: "postgres",
     url: process.env.DATABASE_URL,
     migrations: [path.join(__dirname, "./migrations/*")],
-    entities: [User, Catalog, Artical, Journal, Borrow],
+    entities: [User, Journal, Article, Issue, Borrow],
     synchronize: true,
     logging: !__prod__
   });
@@ -50,7 +50,7 @@ const main = async ()=> {
       path:"/",
       maxAge: 1000 * 3600* 24,
       httpOnly: true,
-      sameSite: "none",
+      sameSite: "lax",
       secure: __prod__,
     },
     saveUninitialized: false,
@@ -58,7 +58,7 @@ const main = async ()=> {
     resave: false,
   };
 
-  console.log(sessionOption);
+  // console.log(sessionOption);
 
   app.use(
     session(sessionOption)
@@ -66,14 +66,14 @@ const main = async ()=> {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers:[HelloResolver, CatalogResolver, UserResolver],
+      resolvers:[JournalResolver, UserResolver, IssueResolver],
       validate: false
     }),
     context: ({req, res}):MyContext => ({req, res, redis }),
   });
-  
+
   const allowedOrigins = [process.env.CORS_URL, "http://localhost:3000"];
-  console.log(allowedOrigins);
+  // console.log(allowedOrigins);
 
   apolloServer.applyMiddleware({app, cors: {origin: allowedOrigins, credentials: true}});
 

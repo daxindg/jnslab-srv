@@ -1,9 +1,10 @@
-import { Catalog } from "../entities/Catalog";
-import { CreateCatalogInputs } from "../types/CreateCatalogInputs";
+import { Journal } from "../entities/Journal";
+import { JournalInputs } from "../types/JournalInputs";
 import { FieldError } from "../types/FieldError";
+import { Not } from "typeorm";
 
 
-export const verifyCreateCatalogInput = async ({title, issn, cn}:CreateCatalogInputs) => {
+export const verifyJournalInput = async ({title, issn, cn}:JournalInputs, id: number = 0) => {
     const errors: FieldError[] = [];
 
     if (title.length < 1) {
@@ -20,7 +21,7 @@ export const verifyCreateCatalogInput = async ({title, issn, cn}:CreateCatalogIn
       });
     }
     else {
-      const item = await Catalog.findOne({where: {issn}});
+      const item = await Journal.findOne({where: {issn, id: Not(id)}});
       if (item) errors.push({
         field: "issn",
         message: "该ISSN已存在"
@@ -37,13 +38,13 @@ export const verifyCreateCatalogInput = async ({title, issn, cn}:CreateCatalogIn
       });
     }
     else {
-      const item = await Catalog.findOne({where: {cn}});
+      const item = await Journal.findOne({where: {cn, id: Not(id)}});
       if (item) errors.push({
         field: "cn",
         message: "该CN号已存在"
       })
     }
-    
+    console.log(title, issn, cn,  id);
 
     return errors;
 }

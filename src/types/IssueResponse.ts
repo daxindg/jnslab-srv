@@ -1,12 +1,12 @@
 import { Field, ObjectType } from "type-graphql";
+import { Issue } from "../entities/Issue";
 import { FieldError } from "./FieldError";
-import { Catalog } from "../entities/Catalog";
 
 @ObjectType()
-export class CreateCatalogResponse {
+export class IssueResponse {
   @Field(() => [FieldError], { nullable: true })
   errors?: FieldError[];
 
   @Field({ nullable: true })
-  catalog?: Catalog;
+  issue?: Issue;
 }
