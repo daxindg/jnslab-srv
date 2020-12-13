@@ -18,7 +18,7 @@ export class User extends BaseEntity{
   @Column({ unique: true })
   email: string;
 
-  @Field({ nullable: true})
+  @Field(() => Int, { nullable: true})
   @Column({default: 0})
   permission: number
 

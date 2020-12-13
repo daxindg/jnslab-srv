@@ -1,0 +1,8 @@
+export enum BorrowState {
+  PENDING_BORROW,
+  PENDING_RETURN,
+  NORMAL,
+  RETURNED,
+  OVERTIME,
+  OVERTIME_RETURNED
+}

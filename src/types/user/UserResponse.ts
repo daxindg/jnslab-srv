@@ -1,10 +1,10 @@
-import { User } from "../entities/User";
+import { User } from "../../entities/User";
 import {
   Field,
 
   ObjectType
 } from "type-graphql";
-import { FieldError } from "./FieldError";
+import { FieldError } from "../FieldError";
 
 
 @ObjectType()

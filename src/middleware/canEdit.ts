@@ -6,7 +6,7 @@ import { testEdit } from "../utils/permissions";
 
 export const canEdit: MiddlewareFn<MyContext> = ({context}, next) => {
   if (!testEdit(context.req.session.permission!)) {
-    throw new Error("permission denied: connot create");
+    throw new Error("权限不足");
   }
   return next();
 }

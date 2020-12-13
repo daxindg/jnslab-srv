@@ -43,6 +43,6 @@ export class Issue extends BaseEntity {
   @ManyToOne(() => Journal, journal => journal.issues, {nullable: false})
   journal: Journal;
 
-  @OneToMany(() => Borrow, borrow => borrow.journal)
+  @OneToMany(() => Borrow, borrow => borrow.issue)
   borrows: Borrow[];
 }

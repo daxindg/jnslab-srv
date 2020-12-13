@@ -18,6 +18,8 @@ import { JournalResolver } from "./resolvers/journal";
 import { UserResolver } from "./resolvers/user";
 import { MyContext } from "./types/MyContext";
 import { IssueResolver } from "./resolvers/issue";
+import { ArticleResolver } from "./resolvers/article";
+import { BorrowResolver } from "./resolvers/borrow";
 
 const main = async () => {
   dotenv.config();
@@ -63,7 +65,7 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [JournalResolver, UserResolver, IssueResolver],
+      resolvers: [JournalResolver, UserResolver, IssueResolver, ArticleResolver, BorrowResolver],
       validate: false,
     }),
     introspection: true,

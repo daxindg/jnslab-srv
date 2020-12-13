@@ -1,5 +1,5 @@
 import { Journal } from "../entities/Journal";
-import { JournalInputs } from "../types/JournalInputs";
+import { JournalInputs } from "../types/journal/JournalInputs";
 import { FieldError } from "../types/FieldError";
 import { Not } from "typeorm";
 

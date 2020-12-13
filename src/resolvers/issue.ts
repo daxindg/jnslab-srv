@@ -1,16 +1,12 @@
 import {
   Arg,
-
   FieldResolver,
-
   Int,
   Mutation,
   Query,
   Resolver,
-
   Root,
-
-  UseMiddleware
+  UseMiddleware,
 } from "type-graphql";
 import { Article } from "../entities/Article";
 import { Issue } from "../entities/Issue";
@@ -26,15 +22,12 @@ export class IssueResolver {
   // Field resolvers
   @FieldResolver(() => [Article])
   articles(@Root() issue: Issue) {
-    return Article.find({where: {issueId: issue.id}});
+    return Article.find({ where: { issueId: issue.id } });
   }
 
   @FieldResolver(() => Journal)
-  async journal(
-    @Root() issue: Issue 
-  ): Promise<Journal | undefined> {
-    
-    const res = await Issue.findOne(issue.id, {relations: ["journal"]});
+  async journal(@Root() issue: Issue): Promise<Journal | undefined> {
+    const res = await Issue.findOne(issue.id, { relations: ["journal"] });
     return res?.journal;
   }
 
@@ -48,35 +41,34 @@ export class IssueResolver {
     @Arg("id", () => Int) id: number,
     @Arg("detail", () => Boolean, { nullable: true }) detail: boolean
   ): Promise<Issue | undefined> {
-    if (detail)detail;
-    return await Issue.findOne(id) ;
+    if (detail) detail;
+    return await Issue.findOne(id);
   }
 
   @Mutation(() => IssueResponse)
   @UseMiddleware([isLogedin, canEdit])
   async createIssue(
-    @Arg("journalId", ()=> Int) journalId: number,
+    @Arg("journalId", () => Int) journalId: number,
     @Arg("inputs") inputs: IssueInputs
   ): Promise<IssueResponse> {
     const errors = await verifyIssueInput(inputs, journalId);
     if (errors.length > 0) return { errors };
 
-    const journal = await Journal.findOne({where: {id: journalId}});
+    const journal = await Journal.findOne({ where: { id: journalId } });
     if (!journal) {
-      throw Error("Invalid journal id")
+      throw Error("Invalid journal id");
     }
-    const issue = new Issue()
+    const issue = new Issue();
     issue.year = inputs.year;
     issue.vol = inputs.vol;
-    issue.no= inputs.no;
-    issue.total = inputs.total
-    issue.rem = inputs.rem || inputs.total
+    issue.no = inputs.no;
+    issue.total = inputs.total;
+    issue.rem = inputs.rem || inputs.total;
     issue.journal = journal;
 
     await Issue.save(issue);
     return { issue };
   }
-
 
   @Mutation(() => IssueResponse)
   @UseMiddleware([canEdit])
@@ -95,7 +87,7 @@ export class IssueResolver {
         ],
       };
     }
-    const errors = await verifyIssueInput(inputs,issue.journalId, id);
+    const errors = await verifyIssueInput(inputs, issue.journalId, id);
     if (errors.length > 0) return { errors };
     console.log(inputs);
     issue.year = inputs.year || issue.year;
@@ -108,7 +100,7 @@ export class IssueResolver {
   }
 
   @Mutation(() => Boolean)
-  async deleteIssue(@Arg("id", ()=>Int)  id: number): Promise<Boolean> {
+  async deleteIssue(@Arg("id", () => Int) id: number): Promise<Boolean> {
     await Issue.delete(id);
     return true;
   }

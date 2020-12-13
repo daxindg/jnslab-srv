@@ -1,6 +1,6 @@
 import { User } from "../entities/User";
 import { FieldError } from "../types/FieldError";
-import { UserRegisterInputs } from "../types/UserRegisterInputs";
+import { UserRegisterInputs } from "../types/user/UserRegisterInputs";
 
 
 export const verifyRegisterInput = async ({username, password, email}:UserRegisterInputs) => {

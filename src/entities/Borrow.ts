@@ -24,7 +24,7 @@ export class Borrow extends BaseEntity {
   @Column()
   borrowAt: Date;
 
-  @Field(() => Date)
+  @Field(() => Date, {nullable: true})
   @Column({nullable: true})
   returnAt: Date;
 
@@ -32,10 +32,17 @@ export class Borrow extends BaseEntity {
   @CreateDateColumn()
   createAt: Date;
 
-  @ManyToOne(() => Issue, journal => journal.borrows, {nullable: false})
-  journal: Issue;
+  @ManyToOne(() => Issue, issue => issue.borrows, {nullable: false})
+  issue: Issue;
 
   @ManyToOne(() => User, user => user.borrows, {nullable: false})
   user: User;
 
+  @Field(()=>Int)
+  @Column()
+  issueId: number;
+
+  @Field(()=>Int)
+  @Column()
+  userId: number;
 }
