@@ -8,13 +8,16 @@ import {
   Root,
   UseMiddleware,
 } from "type-graphql";
+import { In } from "typeorm";
 import { Article } from "../entities/Article";
+import { Borrow } from "../entities/Borrow";
 import { Issue } from "../entities/Issue";
 import { Journal } from "../entities/Journal";
 import { canEdit } from "../middleware/canEdit";
 import { isLogedin } from "../middleware/isLogedin";
 import { IssueInputs } from "../types/IssueInputs";
 import { IssueResponse } from "../types/IssueResponse";
+import { BorrowState } from "../utils/borrowStates";
 import { verifyIssueInput } from "../utils/verifyIssueInput";
 
 @Resolver(() => Issue)
@@ -103,5 +106,14 @@ export class IssueResolver {
   async deleteIssue(@Arg("id", () => Int) id: number): Promise<Boolean> {
     await Issue.delete(id);
     return true;
+  }
+
+  @Query(() => [Borrow])
+  @UseMiddleware([canEdit])
+  async borrowedBy(
+    @Arg('id', () => Int) id: number
+  ): Promise<Borrow[]> {
+    const borrows = await Borrow.find({where: {issueId: id, state: In([BorrowState.NORMAL, BorrowState.OVERTIME])}});
+    return borrows;
   }
 }
