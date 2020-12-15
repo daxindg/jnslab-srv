@@ -123,7 +123,7 @@ export class ArticleResolver {
   @Query(() => [Article])
   async searchArticle(
     @Arg("searchText") searchText: string,
-    @Arg("type") type: "title" | "keyword" | "author",
+    @Arg("type") type: "title" | "keywords" | "author",
     @Arg("cursor", () => Int, { defaultValue: 0 }) cursor: number,
     @Arg("limit", () => Int, { defaultValue: 10 }) limit: number
   ): Promise<Article[]> {
@@ -139,7 +139,7 @@ export class ArticleResolver {
         take: limit,
       });
     }
-    if (type === "keyword") {
+    if (type === "keywords") {
       return Article.find({
         where: {
           keywords: Like(`%${searchText}%`),
