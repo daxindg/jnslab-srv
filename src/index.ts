@@ -30,6 +30,9 @@ const main = async () => {
     entities: [User, Journal, Article, Issue, Borrow],
     synchronize: true,
     logging: !__prod__,
+    ssl: {
+      rejectUnauthorized: false
+    }
   });
 
   await conn.runMigrations();
